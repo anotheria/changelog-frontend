@@ -1,0 +1,25 @@
+@media (max-width: 768px) {
+
+  .header__inner {
+    flex-direction: column;
+  }
+
+  .header__logo {
+    margin-bottom: 15px;
+  }
+
+  .header__search {
+    flex: 1 0 auto;
+    max-width: 400px;
+    width: 100%;
+  }
+
+  .main__inner {
+    flex-direction: column;
+  }
+
+  .filter {
+    border-radius: 0 0 24px 24px;
+    max-width: none;
+  }
+}
