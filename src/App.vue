@@ -1,16 +1,7 @@
 <template>
   <div class="wrapper">
-    <header class="header">
-      <div class="container">
-        <div class="header__inner">
-          <div class="header__logo">Anotheria changelog</div>
-          <form class="header__search search">
-            <input class="search__input" type="text" placeholder="Search" />
-            <button class="search__submit"></button>
-          </form>
-        </div>
-      </div>
-    </header>
+
+    <changelog-header v-model:loader="loaderList" v-model:changelog-list="changelogList"></changelog-header>
 
     <main class="main">
       <div class="container">
@@ -36,12 +27,14 @@
 
 <script>
 import axios from "axios";
+import ChangelogHeader from "@/components/ChangelogHeader";
 import ChangelogList from "@/components/ChangelogList";
 import ChangelogFilters from "@/components/ChangelogFilters";
 
 export default {
   name: "App",
   components: {
+    ChangelogHeader,
     ChangelogFilters,
     ChangelogList,
   },
