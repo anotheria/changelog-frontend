@@ -43,7 +43,7 @@
     }
   }
 
-  &__submit {
+  &__btn {
     position: absolute;
     right: 10px;
     top: 50%;
@@ -52,8 +52,15 @@
     width: 20px;
     height: 20px;
     border: none;
-    background: transparent url("./icon/search.svg") no-repeat center;
     cursor: pointer;
+
+    &--search {
+      background: transparent url("./icon/search.svg") no-repeat center;
+    }
+
+    &--close {
+      background: transparent url("./icon/close.svg") no-repeat center;
+    }
   }
 }
 
@@ -67,6 +74,9 @@
 
   &__col {
     margin: 0 12px;
+    & + & {
+      flex: 1 1 auto;
+    }
   }
 }
 
@@ -75,7 +85,6 @@
   max-width: 273px;
   background: #fff;
   box-shadow: 0 8px 12px #e4e7eb;
-  flex: 1 0 auto;
 
   &__inner {
     position: sticky;
@@ -151,7 +160,6 @@
 }
 
 .changelog {
-  flex: 1 1 auto;
   padding: 24px 0;
 
   &__item {
@@ -212,6 +220,9 @@
   }
 
   &__tags {
+    & + & {
+      margin-left: 6px;
+    }
   }
 
   &__type {
