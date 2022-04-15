@@ -1,22 +1,20 @@
 <template lang="html">
-
   <div class="filter">
-    <div class="filter__inner">
+    <div v-if="!loader" class="filter__inner">
       <div class="filter__item">
-        <div class="filter__item-title">
-          Date
-        </div>
+        <div class="filter__item-title">Date</div>
         <Datepicker
           v-model="date"
-          @update:modelValue="updateDate"
+          @update:modelValue="$emit('update:dateFilter', normalizeDate())"
           range
           :format="'dd/MM/yyyy'"
-          :enableTimePicker="false"></Datepicker>
+          :enableTimePicker="false"
+        ></Datepicker>
       </div>
 
       <div
-        v-for="(filter, index) in filters"
-        :key="`filter-group-${index}`"
+        v-for="(filter, key) in filters"
+        :key="key"
         class="filter__item"
       >
         <div class="filter__item-title">
@@ -24,14 +22,15 @@
         </div>
         <div class="filter__check">
           <label
-            v-for="(filterValue, index) in filter.filterValues"
-            :key="`filter-item-${index}`"
+            v-for="filterValue in filter.filterValues"
+            :key="filterValue.filterValueName"
             class="filter__check-label"
           >
             <input
               class="filter__checkbox"
               type="checkbox"
               v-model="filterValue.isActiveFilter"
+              @change="$emit('update:activeFilters', getActiveFilters())"
             />
             <span class="filter__checkbox-style"></span>
             {{ filterValue.filterValueName }}
@@ -39,8 +38,8 @@
         </div>
       </div>
     </div>
+    <div v-else class="loader">Loading...</div>
   </div>
-
 </template>
 
 <script lang="js">
@@ -54,9 +53,18 @@
     },
     props: {
       filters: {
-        type: Array,
+        type: Object,
         required: true
       },
+      activeFilters: {
+        required: true,
+      },
+      dateFilter:{
+        required: true
+      },
+      loader: {
+        type: Boolean,
+      }
     },
 
     data () {
@@ -67,31 +75,43 @@
 
     methods: {
       normalizeDate() {
+        let normalizedDate = [];
         if (this.date && !this.date[1]) {
-          this.date[1] = this.date[0];
+          normalizedDate = this.date;
+          normalizedDate[1] = this.date[0];
         }
+
         if (this.date) {
-          this.date[0] = new Date(this.date[0].setHours(0, 0, 0, 0));
-          this.date[1] = new Date(this.date[1].setHours(23, 59, 59, 999));
+          normalizedDate[0] = new Date(this.date[0].setHours(0, 0, 0, 0));
+          normalizedDate[1] = new Date(this.date[1].setHours(23, 59, 59, 999));
         }
+
+        return normalizedDate;
       },
 
-      updateDate(){
-        this.normalizeDate();
-
-        this.$emit("updateDate", this.date);
-      }
+      getActiveFilters() {
+        let activeFiltersList = {};
+        for (let filter in this.filters) {
+          activeFiltersList[filter] = [];
+          this.filters[filter].filterValues.forEach((filterValue) => {
+            if (filterValue.isActiveFilter) {
+              activeFiltersList[filter].push(filterValue.filterValueName);
+            }
+          });
+        }
+        return activeFiltersList;
+      },
     },
     computed: {
+    },
 
+    mounted(){
+      this.$emit('update:activeFilters', this.getActiveFilters())
     }
 }
-
-
 </script>
 
 <style scoped lang="scss">
-  .changelog-filters {
-
-  }
+.changelog-filters {
+}
 </style>

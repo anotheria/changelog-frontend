@@ -15,15 +15,19 @@
     <main class="main">
       <div class="container">
         <div class="main__inner">
-
           <changelog-filters
             class="main__col"
             :filters="filters"
-            @update-date="updateDate($event)"
+            :loader="loaderFilters"
+            v-model:date-filter="dateFilter"
+            v-model:active-filters="activeFilters"
           ></changelog-filters>
 
-          <changelog-list :list="filteredChangelogList"></changelog-list>
-
+          <changelog-list
+            class="main__col"
+            :list="filteredChangelogList"
+            :loader="loaderList"
+          ></changelog-list>
         </div>
       </div>
     </main>
@@ -31,100 +35,92 @@
 </template>
 
 <script>
-  import ChangelogList from "@/components/ChangelogList";
-  import ChangelogFilters from "@/components/ChangelogFilters";
-  import axios from 'axios'
+import axios from "axios";
+import ChangelogList from "@/components/ChangelogList";
+import ChangelogFilters from "@/components/ChangelogFilters";
 
-  export default {
-    name: "App",
-    components: {
-      ChangelogFilters,
-      ChangelogList
-    },
-    data: () => {
-      return {
-        changelogList: {},
-        date: null,
-        filters: [
-          {
-            filterName: "type",
-            filterValues: [
-              {
-                filterValueName: "crash",
-                isActiveFilter: false
-              },
-              {
-                filterValueName: "change",
-                isActiveFilter: false
-              },
-            ]
-          },
-          {
-            filterName: "tags",
-            filterValues: [
-              {
-                filterValueName: "cron",
-                isActiveFilter: false
-              },
-              {
-                filterValueName: "tcl",
-                isActiveFilter: false
-              },
-            ]
-          }
-        ],
-      };
-    },
-
-    methods: {
-      async fetchList() {
-        axios
-          .get('./mockup.json')
-          .then(response => (this.changelogList = response.data))
-          .catch(error => console.log(`fetchList() error : ${error}`));
+export default {
+  name: "App",
+  components: {
+    ChangelogFilters,
+    ChangelogList,
+  },
+  data: () => {
+    return {
+      changelogList: [],
+      dateFilter: [],
+      filters: {
+        type: {
+          filterName: "Type",
+          filterValues: [],
+        },
+        tags: {
+          filterName: "Tags",
+          filterValues: [],
+        }
       },
+      activeFilters: null,
+      loaderList: false,
+      loaderFilters: false
+    };
+  },
 
-    updateDate(newDate){
-      this.date = newDate;
+  methods: {
+    async getChangelogList() {
+      this.loaderList = true;
+      this.loaderFilters = true;
+      axios
+        .get("api/changelog/entries/")
+        .then((response) => {
+          this.changelogList = response.data.results.entries;
+          this.getFilters();
+          this.loaderList = false;
+          this.loaderFilters = false;
+        })
+        .catch((error) => console.log(`getChangelogList() error : ${error}`));
+    },
+
+    getFilters() {
+      this.changelogList.forEach(item => {
+        if (!this.filters.type.filterValues.find(filterValue => filterValue.filterValueName === item.type)) {
+          this.filters.type.filterValues.push({filterValueName: item.type, isActiveFilter: false});
+        }
+
+        item.tags.forEach(tag => {
+          if (!this.filters.tags.filterValues.find(filterValue => filterValue.filterValueName === tag)) {
+            this.filters.tags.filterValues.push({filterValueName: tag, isActiveFilter: false});
+          }
+        })
+      })
     }
+
   },
 
   computed: {
     filteredChangelogList() {
       let filteredList = [];
-      if (this.changelogList.data?.length) {
-        filteredList = this.changelogList.data.filter(
+
+      if (this.changelogList?.length && this.activeFilters) {
+        filteredList = this.changelogList.filter(
           (changelogItem) =>
             (!this.activeFilters.tags.length ||
-              this.activeFilters.tags.includes(changelogItem.tags)) &&
+              this.activeFilters.tags.filter(tag => {
+                return changelogItem.tags.some(logItemTag => logItemTag === tag)
+              }).length) &&
             (!this.activeFilters.type.length ||
               this.activeFilters.type.includes(changelogItem.type)) &&
-            (!this.date ||
-              (this.date[0] <= +changelogItem.date &&
-                this.date[1] >= +changelogItem.date))
+            (!this.dateFilter.length ||
+              (this.dateFilter[0] <= +changelogItem.timestamp &&
+                this.dateFilter[1] >= +changelogItem.timestamp))
         );
       }
+
       return filteredList;
-    },
-
-    activeFilters() {
-      let activeFilters = {};
-      this.filters.forEach((filter) => {
-        activeFilters[filter.filterName] = [];
-
-        filter.filterValues.forEach((filterValue) => {
-          if (filterValue.isActiveFilter) {
-            activeFilters[filter.filterName].push(filterValue.filterValueName);
-          }
-        });
-      });
-
-      return activeFilters;
-    },
+    }
   },
 
   mounted() {
-    this.fetchList();
+    this.getChangelogList();
   },
 };
 </script>
