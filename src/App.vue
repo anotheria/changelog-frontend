@@ -8,12 +8,6 @@
     <main class="main">
       <div class="container">
         <div class="main__inner">
-
-          <changelog-list
-            class="main__col"
-            :list="filteredChangelogList"
-            :loader="loaderList"
-          ></changelog-list>
           <div class="main__col">
             <changelog-filters
               :filters="filters"
@@ -22,6 +16,15 @@
               @activeFilters="filterCheckboxGroup"
             ></changelog-filters>
           </div>
+
+          <div class="main__col">
+            <changelog-list
+              :list="changelogList"
+              :loader="loaderList"
+              :filtersList="filtersList"
+              @updateList="getChangelogList"
+            ></changelog-list>
+
             <div class="main__pagination">
               <v-pagination
                 v-model="page"
@@ -39,15 +42,7 @@
 
 <script>
 import axios from "axios";
-import ChangelogList from "@/components/ChangelogList";
-import ChangelogFilters from "@/components/ChangelogFilters";
 
-export default {
-  name: "App",
-  components: {
-    ChangelogFilters,
-    ChangelogList,
-  },
   data: () => {
     return {
       changelogList: [],
@@ -57,9 +52,17 @@ export default {
           filterName: "Type",
           filterValues: [],
   import ChangelogHeader from "@/components/ChangelogHeader";
+  import ChangelogList from "@/components/ChangelogList";
+  import ChangelogFilters from "@/components/ChangelogFilters";
   import VPagination from "@hennge/vue3-pagination";
   import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+
+  export default {
+    name: "App",
+    components: {
       ChangelogHeader,
+      ChangelogFilters,
+      ChangelogList,
       VPagination
         },
         tags: {
