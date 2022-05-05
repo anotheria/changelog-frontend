@@ -19,6 +19,15 @@
             :list="filteredChangelogList"
             :loader="loaderList"
           ></changelog-list>
+            <div class="main__pagination">
+              <v-pagination
+                v-model="page"
+                :pages="pages"
+                :range-size="1"
+                @update:modelValue="changePage"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </main>
@@ -46,10 +55,26 @@ export default {
         type: {
           filterName: "Type",
           filterValues: [],
+  import VPagination from "@hennge/vue3-pagination";
+  import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+      VPagination
         },
         tags: {
           filterName: "Tags",
           filterValues: [],
+        pages: null,
+        page: 1,
+        configList: {
+          paging: {
+            page: 0,
+            itemsOnPage: 10
+          },
+          sort: [
+            {
+              field: "TIMESTAMP",
+              order: "DESC"
+            }
+          ]
         }
       },
       activeFilters: null,
@@ -77,6 +102,11 @@ export default {
       this.changelogList.forEach(item => {
         if (!this.filters.type.filterValues.find(filterValue => filterValue.filterValueName === item.type)) {
           this.filters.type.filterValues.push({filterValueName: item.type, isActiveFilter: false});
+      changePage(page) {
+        this.page = page;
+        this.configList.paging.page = page - 1;
+        this.getChangelogList();
+      },
         }
 
         item.tags.forEach(tag => {
