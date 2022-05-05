@@ -1,7 +1,9 @@
 <template>
   <div class="wrapper">
-
-    <changelog-header v-model:loader="loaderList" v-model:changelog-list="changelogList"></changelog-header>
+    <changelog-header
+      v-model:loader="loaderList"
+      @doSearch="doSearch"
+    ></changelog-header>
 
     <main class="main">
       <div class="container">
@@ -36,14 +38,12 @@
 
 <script>
 import axios from "axios";
-import ChangelogHeader from "@/components/ChangelogHeader";
 import ChangelogList from "@/components/ChangelogList";
 import ChangelogFilters from "@/components/ChangelogFilters";
 
 export default {
   name: "App",
   components: {
-    ChangelogHeader,
     ChangelogFilters,
     ChangelogList,
   },
@@ -55,8 +55,10 @@ export default {
         type: {
           filterName: "Type",
           filterValues: [],
+  import ChangelogHeader from "@/components/ChangelogHeader";
   import VPagination from "@hennge/vue3-pagination";
   import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+      ChangelogHeader,
       VPagination
         },
         tags: {
@@ -136,6 +138,10 @@ export default {
               (this.dateFilter[0] <= +changelogItem.timestamp &&
                 this.dateFilter[1] >= +changelogItem.timestamp))
         );
+      doSearch(value) {
+        this.configList.searchTerm = value.trim();
+        this.configList.paging.page = 0;
+        this.changePage(1);
       }
 
       return filteredList;

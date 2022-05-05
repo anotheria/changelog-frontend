@@ -6,7 +6,7 @@
         <div class="header__logo">Anotheria changelog</div>
         <form class="header__search search" @submit.prevent>
           <input
-            @change="getSearchResult"
+            @change="$emit('doSearch', inputValue)"
             class="search__input"
             type="text"
             placeholder="Search"
@@ -29,15 +29,9 @@
 </template>
 
 <script lang="js">
-  import axios from "axios";
-
   export default {
     name: 'changelog-header',
     props: {
-      changelogList: {
-        type: Array,
-        required: true
-      },
       loader: {
         type: Boolean
       }
@@ -51,21 +45,9 @@
       }
     },
     methods: {
-      async getSearchResult(event) {
-        this.$emit('update:loader', true);
-        let searchRequest = event.target.value;
-        axios
-          .get(`api/changelog/entries/${searchRequest}`)
-          .then((response) => {
-            this.$emit('update:changelogList', response.data.results.entries);
-            this.$emit('update:loader', false);
-          })
-          .catch((error) => console.log(`getSearchResult() error : ${error}`));
-      },
-
-      cleanInput(event) {
+      cleanInput() {
         this.inputValue = '';
-        this.getSearchResult(event);
+        this.$emit('doSearch', this.inputValue)
       }
     },
     computed: {}
