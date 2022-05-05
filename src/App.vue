@@ -41,19 +41,11 @@
 </template>
 
 <script>
-import axios from "axios";
-
-  data: () => {
-    return {
-      changelogList: [],
-      dateFilter: [],
-      filters: {
-        type: {
-          filterName: "Type",
-          filterValues: [],
+  import axios from "axios";
   import ChangelogHeader from "@/components/ChangelogHeader";
   import ChangelogList from "@/components/ChangelogList";
   import ChangelogFilters from "@/components/ChangelogFilters";
+
   import VPagination from "@hennge/vue3-pagination";
   import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 
@@ -64,10 +56,37 @@ import axios from "axios";
       ChangelogFilters,
       ChangelogList,
       VPagination
+    },
+    data: () => {
+      return {
+        changelogList: [],
+        filters: {
+          type: {
+            filterName: "Type",
+            filterValues: [],
+          },
+          tags: {
+            filterName: "Tags",
+            filterValues: [],
+          }
         },
-        tags: {
-          filterName: "Tags",
-          filterValues: [],
+        filtersList: {
+          tags: [],
+          type: []
+        },
+        loaderList: false,
+        loaderFilters: false,
+        showModal: false,
+        currentDate: null,
+        formData: {
+          id: null,
+          timestamp: null,
+          author: '',
+          message: '',
+          reason: '',
+          tags: [],
+          type: null
+        },
         pages: null,
         page: 1,
         configList: {
@@ -82,89 +101,110 @@ import axios from "axios";
             }
           ]
         }
-      },
-      activeFilters: null,
-      loaderList: false,
-      loaderFilters: false
-    };
-  },
-
-  methods: {
-    async getChangelogList() {
-      this.loaderList = true;
-      this.loaderFilters = true;
-      axios
-        .get("api/changelog/entries/")
-        .then((response) => {
-          this.changelogList = response.data.results.entries;
-          this.getFilters();
-          this.loaderList = false;
-          this.loaderFilters = false;
-        })
-        .catch((error) => console.log(`getChangelogList() error : ${error}`));
+      };
     },
 
-    getFilters() {
-      this.changelogList.forEach(item => {
-        if (!this.filters.type.filterValues.find(filterValue => filterValue.filterValueName === item.type)) {
-          this.filters.type.filterValues.push({filterValueName: item.type, isActiveFilter: false});
+    methods: {
+      updateAppData() {
+        this.getChangelogList();
+        this.getFilters();
+      },
+
+      getChangelogList() {
+        this.loaderList = true;
+        this.loaderFilters = true;
+        axios
+          .post("api/changelog/list/", this.configList)
+          .then((response) => {
+            let data = response.data.results.data;
+            this.changelogList = data.items;
+            this.pages = Math.ceil(data.paging.items / data.paging.itemsOnPage);
+            this.loaderList = false;
+            this.loaderFilters = false;
+          })
+          .catch((error) => console.log(error));
+      },
+
+      getFilters() {
+        axios
+          .get("api/changelog/types/")
+          .then((response) => {
+            this.filtersList.type = response.data.results.data;
+
+            this.filters.type.filterName = 'Type'
+            this.filters.type.filterValues = response.data.results.data.map(item => {
+              return {filterValueName: item, isActiveFilter: false};
+            });
+
+          })
+          .catch((error) => console.log(error));
+
+        axios
+          .get("api/changelog/tags/")
+          .then((response) => {
+            this.filtersList.tags = response.data.results.data;
+
+            this.filters.tags.filterName = 'Tags'
+            this.filters.tags.filterValues = response.data.results.data.map(item => {
+              return {filterValueName: item, isActiveFilter: false};
+            });
+
+          })
+          .catch((error) => console.log(error));
+      },
+
       changePage(page) {
         this.page = page;
         this.configList.paging.page = page - 1;
         this.getChangelogList();
       },
+
+      filterDateRange(dateRange) {
+        if (dateRange.length) {
+          this.configList.timeRange = {
+            start: dateRange[0],
+            end: dateRange[1]
+          };
+        } else {
+          delete this.configList.timeRange;
         }
+        this.configList.paging.page = 0;
+        this.changePage(1);
+      },
 
-        item.tags.forEach(tag => {
-          if (!this.filters.tags.filterValues.find(filterValue => filterValue.filterValueName === tag)) {
-            this.filters.tags.filterValues.push({filterValueName: tag, isActiveFilter: false});
+      filterCheckboxGroup(filters) {
+        this.configList.groupFilters = [
+          {
+            field: "TAG",
+            value: filters.tags
+          },
+          {
+            field: "TYPE",
+            value: filters.type
           }
-        })
-      })
-    }
+        ];
 
-  },
+        this.configList.paging.page = 0;
+        this.changePage(1);
+      },
 
-  computed: {
-    filteredChangelogList() {
-      let filteredList = [];
-
-      if (this.changelogList?.length && this.activeFilters) {
-        filteredList = this.changelogList.filter(
-          (changelogItem) =>
-            (!this.activeFilters.tags.length ||
-              this.activeFilters.tags.filter(tag => {
-                return changelogItem.tags.some(logItemTag => logItemTag === tag)
-              }).length) &&
-            (!this.activeFilters.type.length ||
-              this.activeFilters.type.includes(changelogItem.type)) &&
-            (!this.dateFilter.length ||
-              (this.dateFilter[0] <= +changelogItem.timestamp &&
-                this.dateFilter[1] >= +changelogItem.timestamp))
-        );
       doSearch(value) {
         this.configList.searchTerm = value.trim();
         this.configList.paging.page = 0;
         this.changePage(1);
       }
+    },
 
-      return filteredList;
-    }
-  },
+    mounted() {
+      this.updateAppData()
+    },
 
-  mounted() {
-    this.getChangelogList();
-  },
-};
+    computed: {}
+  };
 </script>
 
 <style lang="scss">
-.dp__main {
-  margin-bottom: 25px;
-}
-
-.dp__input {
-  font-size: 14px;
-  min-width: 225px;
-}
+  .dp__main {
+    position: relative;
+  }
 </style>

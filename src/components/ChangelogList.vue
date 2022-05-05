@@ -53,6 +53,14 @@
       <div class="loader">Loading...</div>
     </template>
 
+    <teleport to="body" v-if="showModal">
+      <ChangelogModalForm
+        :filtersList="filtersList"
+        :currentFormData="currentFormData"
+        @closeModal="toggleModal()"
+        @updateList="$emit('updateList')"
+      />
+    </teleport>
 
     <teleport to="body" v-if="isShowModalConfirm">
       <div class="modal-container">
