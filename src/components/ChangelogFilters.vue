@@ -5,7 +5,7 @@
         <div class="filter__item-title">Date</div>
         <Datepicker
           v-model="date"
-          @update:modelValue="$emit('update:dateFilter', normalizeDate())"
+          @update:modelValue="$emit('dateFilter', getDateRange())"
           range
           :format="'dd/MM/yyyy'"
           :enableTimePicker="false"
@@ -30,7 +30,7 @@
               class="filter__checkbox"
               type="checkbox"
               v-model="filterValue.isActiveFilter"
-              @change="$emit('update:activeFilters', getActiveFilters())"
+              @change="$emit('activeFilters', getActiveFilters())"
             />
             <span class="filter__checkbox-style"></span>
             {{ filterValue.filterValueName }}
@@ -46,7 +46,7 @@
   import Datepicker from '@vuepic/vue-datepicker';
   import '@vuepic/vue-datepicker/dist/main.css'
 
-  export default  {
+  export default {
     name: 'changelog-filters',
     components: {
       Datepicker
@@ -56,37 +56,35 @@
         type: Object,
         required: true
       },
-      activeFilters: {
-        required: true,
-      },
-      dateFilter:{
-        required: true
-      },
+      // activeFilters: {
+      //   required: true,
+      // },
+      // dateFilter:{
+      //   required: true
+      // },
       loader: {
         type: Boolean,
       }
     },
 
-    data () {
+    data() {
       return {
         date: null
       }
     },
 
     methods: {
-      normalizeDate() {
-        let normalizedDate = [];
+      getDateRange() {
+        let dateRange = [];
         if (this.date && !this.date[1]) {
-          normalizedDate = this.date;
-          normalizedDate[1] = this.date[0];
+          dateRange = this.date;
+          dateRange[1] = this.date[0];
         }
-
         if (this.date) {
-          normalizedDate[0] = new Date(this.date[0].setHours(0, 0, 0, 0));
-          normalizedDate[1] = new Date(this.date[1].setHours(23, 59, 59, 999));
+          dateRange[0] = new Date(this.date[0].setHours(0, 0, 0, 0)).getTime();
+          dateRange[1] = new Date(this.date[1].setHours(23, 59, 59, 999)).getTime();
         }
-
-        return normalizedDate;
+        return dateRange;
       },
 
       getActiveFilters() {
@@ -102,16 +100,21 @@
         return activeFiltersList;
       },
     },
-    computed: {
-    },
+    computed: {},
 
-    mounted(){
+    mounted() {
       this.$emit('update:activeFilters', this.getActiveFilters())
     }
-}
+  }
 </script>
 
 <style scoped lang="scss">
-.changelog-filters {
-}
+  .dp__main {
+    margin-bottom: 25px;
+  }
+
+  .dp__input {
+    font-size: 14px;
+    min-width: 225px;
+  }
 </style>

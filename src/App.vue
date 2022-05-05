@@ -8,19 +8,20 @@
     <main class="main">
       <div class="container">
         <div class="main__inner">
-          <changelog-filters
-            class="main__col"
-            :filters="filters"
-            :loader="loaderFilters"
-            v-model:date-filter="dateFilter"
-            v-model:active-filters="activeFilters"
-          ></changelog-filters>
 
           <changelog-list
             class="main__col"
             :list="filteredChangelogList"
             :loader="loaderList"
           ></changelog-list>
+          <div class="main__col">
+            <changelog-filters
+              :filters="filters"
+              :loader="loaderFilters"
+              @dateFilter="filterDateRange"
+              @activeFilters="filterCheckboxGroup"
+            ></changelog-filters>
+          </div>
             <div class="main__pagination">
               <v-pagination
                 v-model="page"
