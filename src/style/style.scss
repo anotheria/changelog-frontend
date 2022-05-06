@@ -79,24 +79,6 @@
       flex: 1 1 auto;
     }
   }
-
-  &__pagination {
-    padding: 10px 0 40px;
-    display: flex;
-    justify-content: center;
-
-    .Page {
-      font-size: 16px;
-      width: 26px;
-      height: 26px;
-    }
-
-    .Page-active {
-      background-color: #001938 !important;
-      color: white;
-      border: none;
-    }
-  }
 }
 
 .filter {
@@ -276,6 +258,24 @@
     background: #001938;
     color: #fff;
   }
+
+  &__pagination {
+    padding: 30px 0;
+    display: flex;
+    justify-content: center;
+
+    .Page {
+      font-size: 16px;
+      width: 26px;
+      height: 26px;
+    }
+
+    .Page-active {
+      background-color: #001938 !important;
+      color: white;
+      border: none;
+    }
+  }
 }
 
 .create {
@@ -408,6 +408,16 @@
     &:focus {
       border-color: #aaaeb7;
     }
+
+    &--invalid{
+      border-color: red;
+      &:hover {
+        border-color: red;
+      }
+      &:focus {
+        border-color: #aaaeb7;
+      }
+    }
   }
 
   &__btns {
@@ -455,6 +465,77 @@
 
   &:hover {
     background-color: rgba(#001938, .85);
+  }
+}
+
+.vs {
+  &--invalid {
+    .vs__dropdown-toggle{
+      border-color: red;
+      &:hover {
+        border-color: red;
+      }
+    }
+
+    &.vs--open {
+      .vs__dropdown-toggle{
+        border-color: #aaaeb7;
+      }
+    }
+  }
+
+  &__open-indicator {
+    display: flex;
+    width: 13px;
+    height: 16px;
+  }
+
+  &__actions {
+    padding: 4px 12px 0 3px;
+  }
+
+  &__clear {
+    svg {
+      display: none;
+    }
+    &:before {
+      content: '';
+      display: flex;
+      width: 10px;
+      height: 10px;
+      background-image: url('./icon/close.svg');
+      background-size: cover;
+    }
+  }
+  &__dropdown-menu{
+    border-color: #aaaeb7;
+  }
+
+  &__dropdown-toggle{
+    &:hover,
+    &:focus {
+      border-color: #aaaeb7;
+    }
+  }
+
+  &--open {
+    .vs__dropdown-toggle{
+      border-color: #aaaeb7;
+    }
+  }
+}
+
+.dp {
+  &--invalid {
+    .dp__input {
+      border-color: red;
+      &:hover {
+        border-color: red;
+      }
+      &.dp__input_focus {
+        border-color: #aaaeb7;
+      }
+    }
   }
 }
 
