@@ -19,20 +19,14 @@
 
           <div class="main__col">
             <changelog-list
+              :currentPage="page"
               :list="changelogList"
               :loader="loaderList"
               :filtersList="filtersList"
+              :pages="pages"
               @updateList="getChangelogList"
+              @changePage="changePage"
             ></changelog-list>
-
-            <div class="main__pagination">
-              <v-pagination
-                v-model="page"
-                :pages="pages"
-                :range-size="1"
-                @update:modelValue="changePage"
-              />
-            </div>
           </div>
         </div>
       </div>
@@ -46,16 +40,12 @@
   import ChangelogList from "@/components/ChangelogList";
   import ChangelogFilters from "@/components/ChangelogFilters";
 
-  import VPagination from "@hennge/vue3-pagination";
-  import "@hennge/vue3-pagination/dist/vue3-pagination.css";
-
   export default {
     name: "App",
     components: {
       ChangelogHeader,
       ChangelogFilters,
       ChangelogList,
-      VPagination
     },
     data: () => {
       return {
@@ -87,7 +77,8 @@
           tags: [],
           type: null
         },
-        pages: null,
+        paging: {},
+        pages: 1,
         page: 1,
         configList: {
           paging: {
@@ -100,7 +91,7 @@
               order: "DESC"
             }
           ]
-        }
+        },
       };
     },
 

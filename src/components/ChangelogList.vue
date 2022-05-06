@@ -42,6 +42,15 @@
               </div>
             </div>
           </div>
+
+          <div class="changelog__pagination">
+            <v-pagination
+              v-model="page"
+              :pages="pages"
+              :range-size="1"
+              @update:modelValue="$emit('changePage', page)"
+            />
+          </div>
         </template>
         <template v-else>
           <div class="changelog__item">No data found</div>
@@ -95,11 +104,14 @@
   import moment from 'moment';
   import axios from "axios";
   import ChangelogModalForm from "@/components/ChangelogModalForm";
+  import VPagination from "@hennge/vue3-pagination";
+  import "@hennge/vue3-pagination/dist/vue3-pagination.css";
 
   export default {
     name: 'changelog-list',
     components: {
       ChangelogModalForm,
+      VPagination
     },
     props: {
       list: {
@@ -112,10 +124,19 @@
       filtersList: {
         type: Object,
         required: true
+      },
+      pages:{
+        type: Number,
+        required: true
+      },
+      currentPage: {
+        type: Number,
+        required: true
       }
     },
     emits: {
-      updateList: null
+      updateList: null,
+      changePage: null
     },
     mounted() {
 
@@ -126,6 +147,7 @@
         showModal: false,
         isShowModalConfirm: false,
         currentFormData: {},
+        page: 1,
       }
     },
     methods: {
@@ -174,7 +196,14 @@
           .catch((error) => console.log(error));
       }
     },
-    computed: {}
+    computed: {
+    },
+
+    watch:{
+      currentPage(newValue){
+        this.page = newValue;
+      }
+    }
   }
 </script>
 
