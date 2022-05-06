@@ -66,17 +66,6 @@
         },
         loaderList: false,
         loaderFilters: false,
-        showModal: false,
-        currentDate: null,
-        formData: {
-          id: null,
-          timestamp: null,
-          author: '',
-          message: '',
-          reason: '',
-          tags: [],
-          type: null
-        },
         paging: {},
         pages: 1,
         page: 1,
@@ -180,7 +169,7 @@
       },
 
       doSearch(value) {
-        this.configList.searchTerm = value.trim();
+        this.configList.searchTerm = value;
         this.configList.paging.page = 0;
         this.changePage(1);
       }

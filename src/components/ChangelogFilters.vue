@@ -56,12 +56,6 @@
         type: Object,
         required: true
       },
-      // activeFilters: {
-      //   required: true,
-      // },
-      // dateFilter:{
-      //   required: true
-      // },
       loader: {
         type: Boolean,
       }

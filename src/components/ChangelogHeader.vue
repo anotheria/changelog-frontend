@@ -10,7 +10,7 @@
             class="search__input"
             type="text"
             placeholder="Search"
-            v-model="inputValue"
+            v-model.trim="inputValue"
           />
           <button :type="inputValue ? 'reset' : 'submit'"
                   :class="{
