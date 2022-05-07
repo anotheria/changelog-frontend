@@ -1,5 +1,4 @@
 @media (max-width: 768px) {
-
   .header__inner {
     flex-direction: column;
   }
@@ -22,4 +21,45 @@
     border-radius: 0 0 24px 24px;
     max-width: none;
   }
+
+  .modal__form {
+    width: 90vw;
+  }
+}
+
+@media (max-width: 425px) {
+  .modal__label-text {
+    display: none;
+  }
+
+  .modal__input-wrap {
+    width: 100%;
+  }
+
+  .modal__input {
+    &::placeholder {
+      color: #9b9b9b;
+
+    }
+  }
+  .vs__search, {
+    &::placeholder {
+      color: #9b9b9b;
+
+    }
+  }
+}
+@media (max-width: 345px) {
+  .main__col {
+    margin: 0;
+  }
+
+  .filter__inner {
+    padding: 16px;
+  }
+
+  .changelog__item {
+    padding: 16px;
+  }
+
 }

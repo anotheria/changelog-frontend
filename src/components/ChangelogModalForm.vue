@@ -19,6 +19,7 @@
                   :class="{'modal__input--invalid': v$.formData.reason.$error}"
                   class="modal__input"
                   type="text"
+                  placeholder="Reason"
               />
             </div>
           </div>
@@ -29,6 +30,7 @@
                   v-model.trim="formData.message"
                   class="modal__input"
                   type="text"
+                  placeholder="Message"
               />
             </div>
           </div>
@@ -40,17 +42,21 @@
                   :class="{'modal__input--invalid': v$.formData.author.$error }"
                   class="modal__input"
                   type="text"
+                  placeholder="Author"
               />
             </div>
           </div>
 
-          <div class="modal__label">
+          <div class="modal__label modal__datepicker">
             <span class="modal__label-text"> Date </span>
-            <Datepicker
-                v-model="currentDate"
-                :class="{'dp--invalid': v$.currentDate.$error}"
-                :format="'dd/MM/yyyy HH:mm'"
-            ></Datepicker>
+            <div id="modal-datepicker" class="modal__input-wrap">
+              <Datepicker
+                  v-model="currentDate"
+                  :class="{'dp--invalid': v$.currentDate.$error}"
+                  :format="'dd/MM/yyyy HH:mm'"
+                  teleport="#modal-datepicker"
+              ></Datepicker>
+            </div>
           </div>
 
           <div class="modal__label">
@@ -60,6 +66,7 @@
                   v-model="formData.type"
                   :class="{'vs--invalid': v$.formData.type.$error }"
                   :options="filtersList.type"
+                  :placeholder="'Type'"
               >
                 
                 <template #open-indicator="{ attributes }">
@@ -75,6 +82,7 @@
                   ref="select"
                   v-model="formData.tags"
                   :options="filtersList.tags"
+                  :placeholder="'Tags'"
                   taggable
                   multiple
               >
