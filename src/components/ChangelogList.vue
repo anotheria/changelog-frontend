@@ -110,7 +110,7 @@ export default {
         tags: [],
         type: null,
       };
-      this.toggleModal(true);
+      this.toggleModal( "isShowModalForm",true);
     },
 
     editItem(item) {
