@@ -1,24 +1,24 @@
 <template>
   <div class="wrapper">
-    <changelog-header
+    <ChangelogHeader
       v-model:loader="loaderList"
       @doSearch="doSearch"
-    ></changelog-header>
+    />
 
     <main class="main">
       <div class="container">
         <div class="main__inner">
           <div class="main__col">
-            <changelog-filters
+            <ChangelogFilters
               :filters="filters"
               :loader="loaderFilters"
               @dateFilter="filterDateRange"
               @activeFilters="filterCheckboxGroup"
-            ></changelog-filters>
+            />
           </div>
 
           <div class="main__col">
-            <changelog-list
+            <ChangelogList
               :currentPage="page"
               :list="changelogList"
               :loader="loaderList"
@@ -26,7 +26,8 @@
               :pages="pages"
               @updateList="getChangelogList"
               @changePage="changePage"
-            ></changelog-list>
+              @addNewTags="addNewTags"
+            />
           </div>
         </div>
       </div>
@@ -88,6 +89,12 @@
       updateAppData() {
         this.getChangelogList();
         this.getFilters();
+      },
+
+      addNewTags(newTagsList) {
+        console.log(newTagsList)
+        this.filtersList.tags.push(...newTagsList.tagsList);
+        this.filters.tags.filterValues.push(...newTagsList.filtersTags);
       },
 
       getChangelogList() {

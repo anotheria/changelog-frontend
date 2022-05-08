@@ -1,5 +1,4 @@
 <template lang="html">
-
   <header class="header">
     <div class="container">
       <div class="header__inner">
@@ -12,49 +11,45 @@
             placeholder="Search"
             v-model.trim="inputValue"
           />
-          <button :type="inputValue ? 'reset' : 'submit'"
-                  :class="{
-                    'search__btn--close': inputValue,
-                    'search__btn--search': !inputValue,
-                   }"
-                  @click.prevent="cleanInput"
-                  class="search__btn"
-          >
-          </button>
+          <button
+            :type="inputValue ? 'reset' : 'submit'"
+            :class="{
+              'search__btn--close': inputValue,
+              'search__btn--search': !inputValue,
+            }"
+            @click.prevent="cleanInput"
+            class="search__btn"
+          ></button>
         </form>
       </div>
     </div>
   </header>
-
 </template>
 
 <script lang="js">
-  export default {
-    name: 'changelog-header',
-    props: {
-      loader: {
-        type: Boolean
-      }
-    },
-    mounted() {
+export default {
+  name: 'changelog-header',
+  props: {
+    loader: {
+      type: Boolean
+    }
+  },
+  mounted() {
 
-    },
-    data() {
-      return {
-        inputValue: ''
-      }
-    },
-    methods: {
-      cleanInput() {
-        this.inputValue = '';
-        this.$emit('doSearch', this.inputValue)
-      }
-    },
-    computed: {}
-  }
-
-
+  },
+  data() {
+    return {
+      inputValue: ''
+    }
+  },
+  methods: {
+    cleanInput() {
+      this.inputValue = '';
+      this.$emit('doSearch', this.inputValue)
+    }
+  },
+  computed: {}
+}
 </script>
 
-<style scoped lang="scss">
-</style>
+<style scoped lang="scss"></style>

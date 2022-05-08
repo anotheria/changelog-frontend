@@ -9,13 +9,13 @@
           range
           :format="'dd/MM/yyyy'"
           :enableTimePicker="false"
-        ></Datepicker>
+        />
       </div>
 
       <div
+        class="filter__item"
         v-for="(filter, key) in filters"
         :key="key"
-        class="filter__item"
       >
         <div class="filter__item-title">
           {{ filter.filterName }}
