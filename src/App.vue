@@ -92,7 +92,6 @@
       },
 
       addNewTags(newTagsList) {
-        console.log(newTagsList)
         this.filtersList.tags.push(...newTagsList.tagsList);
         this.filters.tags.filterValues.push(...newTagsList.filtersTags);
       },
