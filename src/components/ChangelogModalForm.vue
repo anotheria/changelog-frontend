@@ -117,6 +117,7 @@
   import "vue-select/dist/vue-select.css";
   import useVuelidate from '@vuelidate/core'
   import {required} from '@vuelidate/validators'
+  import {API_URLS} from "@/constants/api-urls.constant";
 
   export default {
     components: {
@@ -192,7 +193,7 @@
 
         this.formData.timestamp = this.currentDate.getTime();
         axios
-          .post("api/changelog/save/", this.formData)
+          .post(API_URLS.ROOT_URL + "api/changelog/save/", this.formData)
           .then(() => {
             this.$emit("updateList");
             this.$emit("addNewTags", this.newTags);

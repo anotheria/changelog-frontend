@@ -54,6 +54,7 @@ import ChangelogModalConfirm from "@/components/ChangelogModalConfirm";
 import ChangelogItem from "@/components/ChangelogItem";
 import VPagination from "@hennge/vue3-pagination";
 import "@hennge/vue3-pagination/dist/vue3-pagination.css";
+import {API_URLS} from "@/constants/api-urls.constant";
 
 export default {
   name: "changelog-list",
@@ -130,7 +131,7 @@ export default {
 
     deleteItem() {
       axios
-        .delete(`api/changelog/delete/${this.currentItemId}`)
+        .delete(API_URLS.ROOT_URL + `api/changelog/delete/${this.currentItemId}`)
         .then(() => {
           this.$emit("updateList");
           this.toggleModal("isShowModalConfirm", false);

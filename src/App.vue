@@ -40,6 +40,7 @@
   import ChangelogHeader from "@/components/ChangelogHeader";
   import ChangelogList from "@/components/ChangelogList";
   import ChangelogFilters from "@/components/ChangelogFilters";
+  import {API_URLS} from "@/constants/api-urls.constant";
 
   export default {
     name: "App",
@@ -100,7 +101,7 @@
         this.loaderList = true;
         this.loaderFilters = true;
         axios
-          .post("api/changelog/list/", this.configList)
+          .post(API_URLS.ROOT_URL + "api/changelog/list/", this.configList)
           .then((response) => {
             let data = response.data.results.data;
             this.changelogList = data.items;
@@ -113,7 +114,7 @@
 
       getFilters() {
         axios
-          .get("api/changelog/types/")
+          .get(API_URLS.ROOT_URL + "api/changelog/types/")
           .then((response) => {
             this.filtersList.type = response.data.results.data;
 
@@ -126,7 +127,7 @@
           .catch((error) => console.log(error));
 
         axios
-          .get("api/changelog/tags/")
+          .get(API_URLS.ROOT_URL + "api/changelog/tags/")
           .then((response) => {
             this.filtersList.tags = response.data.results.data;
 
