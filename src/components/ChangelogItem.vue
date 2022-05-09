@@ -3,7 +3,7 @@
     <div class="changelog__header">
       <h2 class="changelog__title">{{ item.reason }}</h2>
       <div class="changelog__header-btns">
-        <div @click="edit(item)" class="changelog__header-btn">
+        <div @click="edit(item.id)" class="changelog__header-btn">
           <img src="@/style/icon/edit.svg" alt="" />
         </div>
         <div @click="deleteItem(item.id)" class="changelog__header-btn">
@@ -54,8 +54,8 @@ export default {
 			this.$emit("delete", itemId);
 		},
 
-		edit(item){
-			this.$emit("edit", item);
+		edit(itemId){
+			this.$emit("edit", itemId);
 		}
 	}
 };

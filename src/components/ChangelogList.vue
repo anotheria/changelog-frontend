@@ -114,9 +114,15 @@ export default {
       this.toggleModal( "isShowModalForm",true);
     },
 
-    editItem(item) {
-      this.currentFormData = { ...item };
-      this.toggleModal("isShowModalForm", true);
+    editItem(itemId) {
+      axios
+        .get(API_URLS.ROOT_URL + `api/changelog/${itemId}`)
+        .then((response) => {
+          let data = response.data.results.data;
+          this.toggleModal("isShowModalForm", true);
+          this.currentFormData = { ...data }
+        })
+        .catch((error) => console.log(error));
     },
 
     toggleModal(modalType, isActive) {
